@@ -8,51 +8,47 @@ from scipy.spatial.distance import cdist
 """i - одна из 16 точек """
 def math_expect(src_point, i):
     count_of_frames = len(src_point)
-    x1 = [0] * count_of_frames
-    y1 = [0] * count_of_frames
+    x = [0] * count_of_frames
+    y = [0] * count_of_frames
 
     for j in range(0, count_of_frames):
-        x1[j] = src_point[j][0][i][0]
-        y1[j] = src_point[j][0][i][1]
+        x[j] = src_point[j][0][i][0]
+        y[j] = src_point[j][0][i][1]
 
-    math_expect_x1 = statistics.mean(x1)
-    math_expect_y1 = statistics.mean(y1)
-    return [math_expect_x1, math_expect_y1]
+    return [np.mean(x), np.mean(y)]
 
 """Дисперсия"""
 def variance(src_point, i):
     count_of_frames = len(src_point)
-    x1 = [0] * count_of_frames
-    y1 = [0] * count_of_frames
+    x = [0] * count_of_frames
+    y = [0] * count_of_frames
 
     for j in range(0, count_of_frames):
-        x1[j] = src_point[j][0][i][0]
-        y1[j] = src_point[j][0][i][1]
+        x[j] = src_point[j][0][i][0]
+        y[j] = src_point[j][0][i][1]
 
-    variance_x = statistics.variance(x1)
-    variance_y = statistics.variance(y1)
-    return [variance_x, variance_y]
+    return [np.var(x), np.var(y)]
 
 """Ковариационная матрица"""
 def covariance (src_point, i):
     count_of_frames = len(src_point)
-    x1 = [0] * count_of_frames
-    y1 = [0] * count_of_frames
+    x = [0] * count_of_frames
+    y = [0] * count_of_frames
 
     for j in range(0, count_of_frames):
-        x1[j] = src_point[j][0][i][0]
-        y1[j] = src_point[j][0][i][1]
+        x[j] = src_point[j][0][i][0]
+        y[j] = src_point[j][0][i][1]
 
-    return np.cov(x1, y1)
+    return np.cov(x, y)
 
 """Расстояние Махалонобиса"""
 def mahalanobisa(xy, i, src_point):
     inv_covmat = sp.linalg.inv(covariance(src_point, i))
     math_expected = math_expect(src_point, i)
     m = np.array([[math_expected[0]], [math_expected[1]]])
-    k = abs(xy - m)
-    mah = (k.T).dot(inv_covmat)
-    return math.sqrt(mah.dot(k))
+    mat = abs(xy - m)
+    mah = (mat.T).dot(inv_covmat)
+    return math.sqrt(mah.dot(mat))
 
 def outlier(p, i, src_point):
     count = 0
